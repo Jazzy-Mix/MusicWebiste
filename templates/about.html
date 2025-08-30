@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - JazzyMix Music Producer</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #1a1a1a;
+            --accent-color: #ffd23f;
+            --text-light: #f8f9fa;
+            --gradient: linear-gradient(135deg, #ff6b35, #ffd23f);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 10, 10, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><defs><pattern id="music" patternUnits="userSpaceOnUse" width="100" height="100"><path d="M20,50 Q50,20 80,50 Q50,80 20,50" fill="none" stroke="%23ff6b35" stroke-width="2" opacity="0.3"/></pattern></defs><rect fill="url(%23music)" width="100%" height="100%"/></svg>');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient);
+            opacity: 0.1;
+            animation: pulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; }
+            100% { opacity: 0.15; }
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .badge {
+            background: var(--primary-color) !important;
+            color: white;
+            padding: 6px 12px;
+            margin: 2px;
+            border-radius: 20px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .timeline-vertical {
+            position: relative;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 80px;
+            bottom: -50px;
+            width: 2px;
+            background: rgba(255, 107, 53, 0.3);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-year div {
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .profile-image {
+            width: 300px;
+            height: 300px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-image .placeholder-icon {
+            font-size: 8rem;
+            color: white;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-color);
+            text-align: center;
+            line-height: 45px;
+            border-radius: 50%;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background: #000;
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 3rem 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 50vh;
+                text-align: center;
+            }
+            
+            .display-4 {
+                font-size: 2.5rem;
+            }
+            
+            .timeline-item::before {
+                left: 30px;
+            }
+
+            .profile-image {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-music me-2"></i>JazzyMix
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/{{ url_for('home) }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('home') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('services') }}">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('portfolio') }}">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact) }}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary ms-2 px-3" href="{{ url_for('contact) }}">Book Session</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Header -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">About Me</h1>
+                    <p class="lead mb-4">Passionate music producer and audio engineer dedicated to bringing your creative vision to life through professional sound design and production.</p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="profile-image">
+                        <!-- Replace with actual image or keep placeholder -->
+                        <!-- <img src="images/aboutme.jpeg" alt="JazzyMix Music Producer"> -->
+                        <i class="fas fa-user-music placeholder-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mb-5">
+                    <h2 class="fw-bold mb-4">My Story</h2>
+                    <p class="lead text-muted mb-4">
+                        Music has been my passion for as long as I can remember. What started as experimenting with beats on my laptop has evolved into a professional career helping artists worldwide bring their musical visions to life.
+                    </p>
+                    
+                    <p class="mb-4">
+                        I'm Moses Samson Seun, a detail-oriented music producer with a deep love for music and sound. My expertise lies in mixing, mastering, and producing dynamic beats, as well as enhancing podcast audio quality. I am committed to elevating audio projects to their fullest potential, ensuring they resonate with audiences and meet industry standards.
+                    </p>
+                    
+                    <p class="mb-4">
+                        Over the years, I've had the privilege of working with talented artists across various genres, from emerging independent musicians to established acts. My approach combines technical expertise with creative intuition, ensuring that every track not only sounds professional but also captures the unique essence of the artist.
+                    </p>
+                    
+                    <p class="mb-4">
+                        I specialize in Afrobeats, Hip-Hop, R&B, Gospel, Drill, Trap and Pop music production, but I love exploring new sounds and pushing creative boundaries. Whether you're looking for hard-hitting afrobeats, smooth R&B instrumentals, or uplifting gospel compositions, I'm here to make your musical dreams a reality.
+                    </p>
+                    
+                    <p class="mb-4">
+                        My studio is equipped with industry-standard gear and software, allowing me to deliver professional-quality productions that compete with major label releases. But beyond the technical aspects, what I bring to every project is genuine passion for music and commitment to excellence.
+                    </p>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Stats Card -->
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold mb-3">By The Numbers</h5>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <h3 style="color: var(--primary-color);">50+</h3>
+                                    <small class="text-muted">Tracks Produced</small>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <h3 style="color: var(--secondary-color);">25+</h3>
+                                    <small class="text-muted">Happy Clients</small>
+                                </div>
+                                <div class="col-6">
+                                    <h3 style="color: var(--accent-color);">5+</h3>
+                                    <small class="text-muted">Years Experience</small>
+                                </div>
+                                <div class="col-6">
+                                    <h3 style="color: var(--primary-color);">7+</h3>
+                                    <small class="text-muted">Genres Covered</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Specialties -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">Specialties</h5>
+                            <div class="mb-2">
+                                <span class="badge">Afrobeats</span>
+                                <span class="badge">Hip-Hop</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge">Gospel</span>
+                                <span class="badge">R&B</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge">Pop</span>
+                                <span class="badge">Podcast Cleaning</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge">Drill</span>
+                                <span class="badge">Trap</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact CTA -->
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="fw-bold mb-3">Let's Work Together</h5>
+                            <p class="text-muted mb-3">Ready to create something amazing?</p>
+                            <a href="/contact" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-envelope me-2"></i>Get In Touch
+                            </a>
+                            <a href="/book" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-calendar-alt me-2"></i>Book Session
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipment Section -->
+    <section class="section-padding" style="background: rgba(26, 26, 26, 0.3);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Studio Setup</h2>
+                <p class="lead text-muted">Professional equipment for professional results</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-microphone fa-3x" style="color: var(--accent-color);"></i>
+                            </div>
+                            <h5 class="fw-bold">Recording</h5>
+                            <ul class="list-unstyled text-muted">
+                                <li>Shure SM7B</li>
+                                <li>Audio-Technica AT2020</li>
+                                <li>Focusrite Scarlett 18i20</li>
+                                <li>Cloudlifter CL-1</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-keyboard fa-3x" style="color: var(--primary-color);"></i>
+                            </div>
+                            <h5 class="fw-bold">Instruments</h5>
+                            <ul class="list-unstyled text-muted">
+                                <li>Native Instruments Komplete</li>
+                                <li>Serum Synthesizer</li>
+                                <li>Omnisphere 2</li>
+                                <li>Kontakt Libraries</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-desktop fa-3x" style="color: var(--primary-color);"></i>
+                            </div>
+                            <h5 class="fw-bold">DAW Software</h5>
+                            <ul class="list-unstyled text-muted">
+                                <li>FL Studio</li>
+                                <li>Logic Pro X</li>
+                                <li>Ableton Live</li>
+                                <li>ProTools</li>
+                                <li>Studio One Pro</li>
+                                <li>Cubase</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-volume-up fa-3x" style="color: var(--secondary-color);"></i>
+                            </div>
+                            <h5 class="fw-bold">Monitoring</h5>
+                            <ul class="list-unstyled text-muted">
+                                <li>Yamaha HS8</li>
+                                <li>KRK Rokit 5</li>
+                                <li>Audio-Technica ATH-M50x</li>
+                                <li>Beyerdynamic DT 990</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4">
+                    <h2 class="fw-bold mb-4">My Philosophy</h2>
+                    <p class="lead text-muted mb-4">
+                        "Every artist has a unique sound waiting to be discovered. My job is to help you find it."
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div style="width: 40px; height: 40px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                    <i class="fas fa-lightbulb" style="color: white;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Creative First</h6>
+                                    <p class="small text-muted">Every project starts with understanding your creative vision, not just technical requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div style="width: 40px; height: 40px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                    <i class="fas fa-handshake" style="color: white;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Collaborative</h6>
+                                    <p class="small text-muted">Music is better when we work together. Your input shapes every decision in the production process.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div style="width: 40px; height: 40px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                    <i class="fas fa-award" style="color: white;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Quality Focused</h6>
+                                    <p class="small text-muted">No compromises on quality. Every track is crafted with attention to detail and professional standards.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div style="width: 40px; height: 40px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                    <i class="fas fa-clock" style="color: white;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Reliable</h6>
+                                    <p class="small text-muted">Consistent communication, on-time delivery, and professional service you can count on.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-3">Quick Facts</h5>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <strong>Based in:</strong><br>
+                                    <span class="text-muted">Nairobi, Kenya</span>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Experience:</strong><br>
+                                    <span class="text-muted">5+ Years</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-12 mb-2">
+                                    <strong>Main Genres:</strong><br>
+                                    <span class="text-muted">Afrobeats, Hip-Hop, Gospel, R&B, Drill, Pop, Trap</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-12 mb-2">
+                                    <strong>Availability:</strong><br>
+                                    <span class="text-muted">Mon-Sun, 8AM-10PM EAT</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <strong>Certifications:</strong><br>
+                                <span class="text-muted">FL Studio Certified, Pro Tools Certified</span>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h6 class="fw-bold mb-2">Fun Facts:</h6>
+                            <ul class="list-unstyled text-muted small">
+                                <li><i class="fas fa-music me-2" style="color: var(--primary-color);"></i>Started producing music at age 16</li>
+                                <li><i class="fas fa-graduation-cap me-2" style="color: var(--accent-color);"></i>Self-taught musician</li>
+                                <li><i class="fas fa-guitar me-2" style="color: var(--primary-color);"></i>Can play 3 instruments</li>
+                                <li><i class="fas fa-coffee me-2" style="color: var(--accent-color);"></i>Coffee enthusiast (powers late-night sessions!)</li>
+                                <li><i class="fas fa-gamepad me-2" style="color: var(--primary-color);"></i>Gamer (great for electronic music inspiration)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Timeline -->
+    <section class="section-padding" style="background: rgba(26, 26, 26, 0.3);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">My Musical Journey</h2>
+                <p class="lead text-muted">Key moments that shaped my career</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="timeline-vertical">
+                        <div class="timeline-item">
+                            <div class="d-flex">
+                                <div class="timeline-year">
+                                    <div style="width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        2019
+                                    </div>
+                                </div>
+                                <div class="timeline-content ms-4">
+                                    <h5 class="fw-bold">First Professional Mix</h5>
+                                    <p class="text-muted">Completed my first professional mix for a local artist. That moment when I realized music production could be more than just a hobby.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="d-flex">
+                                <div class="timeline-year">
+                                    <div style="width: 60px; height: 60px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        2020
+                                    </div>
+                                </div>
+                                <div class="timeline-content ms-4">
+                                    <h5 class="fw-bold">Studio Setup</h5>
+                                    <p class="text-muted">Built my first professional home studio. Invested in quality monitors, interfaces, and acoustic treatment.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="d-flex">
+                                <div class="timeline-year">
+                                    <div style="width: 60px; height: 60px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        2022
+                                    </div>
+                                </div>
+                                <div class="timeline-content ms-4">
+                                    <h5 class="fw-bold">First Major Placement</h5>
+                                    <p class="text-muted">Mixed a track that reached 100K+ streams on Spotify. Working with established artists opened new doors and opportunities.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="d-flex">
+                                <div class="timeline-year">
+                                    <div style="width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        2024
+                                    </div>
+                                </div>
+                                <div class="timeline-content ms-4">
+                                    <h5 class="fw-bold">Full-Time Producer</h5>
+                                    <p class="text-muted">Transitioned to full-time music production. Now working with artists worldwide and loving every minute of it.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">What Drives Me</h2>
+                <p class="lead text-muted">The principles that guide my work</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <div style="width: 80px; height: 80px; background: var(--gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-heart" style="color: white; font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                        <h4 class="fw-bold">Passion</h4>
+                        <p class="text-muted">Music is my life. Every project gets my full creative energy and enthusiasm, no matter the size or budget.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-users" style="color: white; font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                        <h4 class="fw-bold">Collaboration</h4>
+                        <p class="text-muted">The best music comes from true collaboration. I listen to your ideas and work together to create something special.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-star" style="color: white; font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                        <h4 class="fw-bold">Excellence</h4>
+                        <p class="text-muted">I'm never satisfied with "good enough." Every track is polished and refined until it meets professional standards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding" style="background: rgba(26, 26, 26, 0.3);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-4">Ready to Work Together?</h2>
+                    <p class="lead mb-4">I'm always excited to work on new projects and help artists bring their vision to life. Let's create something amazing together!</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="/contact" class="btn btn-primary btn-lg">
+                            <i class="fas fa-envelope me-2"></i>Send Message
+                        </a>
+                        <a href="/book" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-calendar-alt me-2"></i>Book Session
+                        </a>
+                        <a href="/portfolio" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-play me-2"></i>Hear My Work
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">JazzyMix</h5>
+                    <p class="text-muted">Professional music production and audio engineering services to bring your creative vision to life.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://instagram.com/jazzy.mix" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="mailto:psalmjazzymix001@yahoo.com">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="tel:+254111925802">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                        <a href="https://youtube.com/@jazzymix" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-muted text-decoration-none">Home</a></li>
+                        <li><a href="/about" class="text-muted text-decoration-none">About</a></li>
+                        <li><a href="/services" class="text-muted text-decoration-none">Services</a></li>
+                        <li><a href="/portfolio" class="text-muted text-decoration-none">Portfolio</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="fw-bold mb-3">Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/services" class="text-muted text-decoration-none">Mixing</a></li>
+                        <li><a href="/services" class="text-muted text-decoration-none">Mastering</a></li>
+                        <li><a href="/services" class="text-muted text-decoration-none">Beat Making</a></li>
+                        <li><a href="/services" class="text-muted text-decoration-none">Podcast Cleaning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-4">
+                    <h6 class="fw-bold mb-3">Contact Info</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>psalmjazzymix001@yahoo.com</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>+254 111 925802</li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Nairobi, Kenya</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255, 107, 53, 0.2);">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <p class="text-muted mb-0">&copy; 2024 JazzyMix. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-muted text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            }
+        });
+
+        // Add loading animation to buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.getAttribute('href') && !this.getAttribute('href').startsWith('#')) {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+                    setTimeout(() => {
+                        // Reset button text after navigation
+                        this.innerHTML = this.dataset.originalText || this.innerHTML;
+                    }, 500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

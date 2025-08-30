@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Jazzy.Mix Music Producer{% endblock %}
+
+{% block content %}
+<!-- Contact Header -->
+<section class="hero-section" style="min-height: 60vh;">
+    <div class="container hero-content">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Get In Touch</h1>
+                <p class="lead mb-4">Ready to discuss your next project? I'm here to help bring your musical vision to life.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8 mb-5">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Send Me a Message</h3>
+                        
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Your Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject *</label>
+                                <select class="form-select" id="subject" name="subject" required>
+                                    <option value="">Select a topic...</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Beat Purchase">Beat Purchase</option>
+                                    <option value="Custom Production">Custom Production</option>
+                                    <option value="Mixing & Mastering">Mixing & Mastering</option>
+                                    <option value="Collaboration">Collaboration</option>
+                                    <option value="Licensing">Licensing Questions</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message *</label>
+                                <textarea class="form-control" id="message" name="message" rows="6" required 
+                                          placeholder="Tell me about your project, timeline, budget, or any questions you have..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="col-lg-4">
+                <!-- Quick Contact -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-phone me-2" style="color: var(--primary-color);"></i>
+                            Quick Contact
+                        </h5>
+                        <div class="mb-3">
+                            <strong>Phone:</strong><br>
+                            <a href="tel:+254111925802" class="text-white">+254 111 925802</a>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Email:</strong><br>
+                            <a href="mailto:psalmjazzymix001@yahoo.com" class="text-white">psalmjazzymix001@yahoo.com</a>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Response Time:</strong><br>
+                            Usually within 2-4 hours
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Studio Location -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-map-marker-alt me-2" style="color: var(--secondary-color);"></i>
+                            Studio Location
+                        </h5>
+                        <p>
+                            <strong>Professional Recording Studio</strong><br>
+                            Nairobi, Kenya<br>
+                        </p>
+                        <small class="text-muted">By appointment only</small>
+                    </div>
+                </div>
+                
+                <!-- Business Hours -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-clock me-2" style="color: var(--accent-color);"></i>
+                            Business Hours
+                        </h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Monday - Friday:</small><br>
+                                <strong>10:00 AM - 10:00 PM</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Weekends:</small><br>
+                                <strong>12:00 PM - 8:00 PM</strong>
+                            </div>
+                        </div>
+                        <hr>
+                        <small class="text-muted">Emergency sessions available by special arrangement</small>
+                    </div>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-share-alt me-2" style="color: var(--primary-color);"></i>
+                            Follow Me
+                        </h5>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="https://instagram.com/jazzy.mix" target="_blank" class="btn btn-outline-primary">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-youtube"></i> YouTube
+                            </a>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-spotify"></i> Spotify
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section-padding" style="background: rgba(0,0,0,0.3);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Frequently Asked Questions</h2>
+            <p class="lead text-muted">Quick answers to common questions</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse1" style="background: transparent; color: white; border: none;">
+                                What's your typical turnaround time?
+                            </button>
+                        </h2>
+                        <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="color: rgba(255,255,255,0.8);">
+                                For mixing, I typically deliver within 3-5 business days. Mastering can take 1-2 days. Full productions can take 1-2 weeks depending on complexity. Rush delivery is available for an additional fee.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse2" style="background: transparent; color: white; border: none;">
+                                Do you offer payment plans?
+                            </button>
+                        </h2>
+                        <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="color: rgba(255,255,255,0.8);">
+                                Yes! For projects over $500, I offer flexible payment plans. Typically 50% upfront and 50% upon completion, but we can discuss options that work for your budget.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <h2 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse3" style="background: transparent; color: white; border: none;">
+                                Can I get stems and project files?
+                            </button>
+                        </h2>
+                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="color: rgba(255,255,255,0.8);">
+                                Absolutely! Stems are available for an additional $25, and full project files can be provided for $50 extra. This gives you complete flexibility for future edits and remixes.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <h2 class="accordion-header" id="faq4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse4" style="background: transparent; color: white; border: none;">
+                                What if I need revisions?
+                            </button>
+                        </h2>
+                        <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="color: rgba(255,255,255,0.8);">
+                                All projects include 2 rounds of revisions at no extra cost. Additional revisions are available for $25 each. I want to make sure you're 100% happy with the final product!
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <h2 class="accordion-header" id="faq5">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse5" style="background: transparent; color: white; border: none;">
+                                Do you work remotely?
+                            </button>
+                        </h2>
+                        <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" style="color: rgba(255,255,255,0.8);">
+                                Yes! While I have a professional studio in Nairobi, I work with clients worldwide. We can collaborate via video calls, file sharing, and real-time feedback to create amazing music remotely.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+
+{% block title %}Book a Session - JazzyMix Music Producer{% endblock %}
+
+{% block content %}
+<!-- Booking Header -->
+<section class="hero-section" style="min-height: 60vh;">
+    <div class="container hero-content">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Book Your Session</h1>
+                <p class="lead mb-4">Ready to bring your musical vision to life? Let's schedule a session and create something amazing together.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Form Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Booking Form -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Session Details</h3>
+                        
+                        <form method="POST" id="bookingForm">
+                            <div class="row">
+                                <!-- Personal Information -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="service" class="form-label">Service Type *</label>
+                                    <select class="form-select" id="service" name="service" required onchange="updatePricing()">
+                                        <option value="">Select a service...</option>
+                                        {% for service in services %}
+                                        <option value="{{ service.name }}" data-price="{{ service.price }}">
+                                            {{ service.name }} - {{ service.price }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Date and Time -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="date" class="form-label">Preferred Date *</label>
+                                    <input type="date" class="form-control" id="date" name="date" required onchange="checkAvailability()">
+                                    <div class="form-text">Select your preferred session date</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="time" class="form-label">Preferred Time *</label>
+                                    <select class="form-select" id="time" name="time" required>
+                                        <option value="">Select date first...</option>
+                                    </select>
+                                    <div class="form-text">Available times will appear after selecting a date</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Budget -->
+                            <div class="mb-3">
+                                <label for="budget" class="form-label">Budget Range</label>
+                                <select class="form-select" id="budget" name="budget">
+                                    <option value="">Select budget range...</option>
+                                    <option value="$50-100">$50 - $100</option>
+                                    <option value="$100-300">$100 - $300</option>
+                                    <option value="$300-500">$300 - $500</option>
+                                    <option value="$500-1000">$500 - $1000</option>
+                                    <option value="$1000+">$1000+</option>
+                                    <option value="flexible">Flexible</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Project Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Project Description *</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" required 
+                                          placeholder="Tell me about your project... What style are you looking for? Do you have any references? What's your vision?"></textarea>
+                                <div class="form-text">The more details you provide, the better I can prepare for our session</div>
+                            </div>
+                            
+                            <!-- File Upload -->
+                            <div class="mb-3">
+                                <label for="reference" class="form-label">Reference Files (Optional)</label>
+                                <input type="file" class="form-control" id="reference" name="reference" multiple 
+                                       accept=".mp3,.wav,.m4a,.flac">
+                                <div class="form-text">Upload reference tracks, demos, or any files that might help (Max 10MB each)</div>
+                            </div>
+                            
+                            <!-- Additional Options -->
+                            <div class="mb-4">
+                                <label class="form-label">Additional Services</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="mixing" name="additional[]" value="mixing">
+                                            <label class="form-check-label" for="mixing">
+                                                Mixing (+$75)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="mastering" name="additional[]" value="mastering">
+                                            <label class="form-check-label" for="mastering">
+                                                Mastering (+$50)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="stems" name="additional[]" value="stems">
+                                            <label class="form-check-label" for="stems">
+                                                Stems (+$25)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Terms -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" style="color: var(--primary-color);">Terms of Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-calendar-check me-2"></i>Book Session
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Info Sidebar -->
+            <div class="col-lg-4">
+                <!-- Session Info -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-info-circle me-2" style="color: var(--primary-color);"></i>
+                            Session Information
+                        </h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-clock me-2 text-muted"></i>
+                                <strong>Duration:</strong> 2-4 hours typical
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                                <strong>Location:</strong> Remote Sessions Available
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                                <strong>Response Time:</strong> Within 24 hours
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-redo me-2 text-muted"></i>
+                                <strong>Revisions:</strong> 2 included
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Process Timeline -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-list-ol me-2" style="color: var(--secondary-color);"></i>
+                            Booking Process
+                        </h5>
+                        <div class="timeline">
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex">
+                                    <div class="timeline-marker">1</div>
+                                    <div class="timeline-content">
+                                        <strong>Submit Request</strong>
+                                        <p class="small text-muted mb-0">Fill out the booking form with your project details</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex">
+                                    <div class="timeline-marker">2</div>
+                                    <div class="timeline-content">
+                                        <strong>Confirmation Call</strong>
+                                        <p class="small text-muted mb-0">We'll discuss your vision and confirm details</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex">
+                                    <div class="timeline-marker">3</div>
+                                    <div class="timeline-content">
+                                        <strong>Session Day</strong>
+                                        <p class="small text-muted mb-0">Create magic in the studio together</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="d-flex">
+                                    <div class="timeline-marker">4</div>
+                                    <div class="timeline-content">
+                                        <strong>Final Delivery</strong>
+                                        <p class="small text-muted mb-0">Receive your polished, professional track</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-headset me-2" style="color: var(--accent-color);"></i>
+                            Need Help?
+                        </h5>
+                        <p class="text-muted mb-3">Have questions about booking or not sure which service is right for you?</p>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-envelope me-2"></i>Contact Me
+                            </a>
+                            <a href="tel:+254111925802" class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i>Call Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pricing Summary -->
+                <div class="card" id="pricingSummary" style="display: none;">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-calculator me-2" style="color: var(--primary-color);"></i>
+                            Price Estimate
+                        </h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span id="selectedService">Service:</span>
+                            <span id="servicePrice">$0</span>
+                        </div>
+                        <div id="additionalServices"></div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Estimated Total:</span>
+                            <span id="totalPrice">$0</span>
+                        </div>
+                        <small class="text-muted">Final price may vary based on project complexity</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.2);">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms of Service</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Booking Terms</h6>
+                <ul>
+                    <li>All sessions must be confirmed 24 hours in advance</li>
+                    <li>Cancellations within 24 hours may incur a fee</li>
+                    <li>Payment is due 50% upfront, 50% upon completion</li>
+                    <li>All work includes 2 rounds of revisions</li>
+                </ul>
+                
+                <h6>Usage Rights</h6>
+                <ul>
+                    <li>Basic license includes standard usage rights</li>
+                    <li>Exclusive rights require separate agreement</li>
+                    <li>Credit must be given as "Produced by JazzyMix"</li>
+                    <li>Original files remain property of the producer</li>
+                </ul>
+                
+                <h6>Delivery</h6>
+                <ul>
+                    <li>Standard turnaround is 3-7 business days</li>
+                    <li>Rush delivery available for additional fee</li>
+                    <li>Files delivered via secure download link</li>
+                    <li>Stems and project files available upon request</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set minimum date to tomorrow
+const dateInput = document.getElementById('date');
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+dateInput.min = tomorrow.toISOString().split('T')[0];
+
+// Check availability when date changes
+async function checkAvailability() {
+    const date = dateInput.value;
+    const timeSelect = document.getElementById('time');
+    
+    if (!date) {
+        timeSelect.innerHTML = '<option value="">Select date first...</option>';
+        return;
+    }
+    
+    timeSelect.innerHTML = '<option value="">Loading...</option>';
+    
+    try {
+        const response = await fetch(`/api/availability/${date}`);
+        const data = await response.json();
+        
+        timeSelect.innerHTML = '<option value="">Select a time...</option>';
+        
+        if (data.available && data.times.length > 0) {
+            data.times.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                timeSelect.appendChild(option);
+            });
+        } else {
+            timeSelect.innerHTML = '<option value="">No availability</option>';
+        }
+    } catch (error) {
+        timeSelect.innerHTML = '<option value="">Error loading times</option>';
+        console.error('Error checking availability:', error);
+    }
+}
+
+// Update pricing display
+function updatePricing() {
+    const serviceSelect = document.getElementById('service');
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const pricingSummary = document.getElementById('pricingSummary');
+    
+    if (selectedOption.value) {
+        const serviceName = selectedOption.value;
+        const servicePrice = selectedOption.dataset.price;
+        
+        document.getElementById('selectedService').textContent = serviceName;
+        document.getElementById('servicePrice').textContent = servicePrice;
+        
+        calculateTotal();
+        pricingSummary.style.display = 'block';
+    } else {
+        pricingSummary.style.display = 'none';
+    }
+}
+
+// Calculate total with additional services
+function calculateTotal() {
+    const serviceSelect = document.getElementById('service');
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    const additionalCheckboxes = document.querySelectorAll('input[name="additional[]"]:checked');
+    const additionalContainer = document.getElementById('additionalServices');
+    
+    let basePrice = 0;
+    let additionalTotal = 0;
+    
+    // Extract base price
+    if (selectedOption.value) {
+        const priceText = selectedOption.dataset.price;
+        // Extract numeric value from price string
+        basePrice = parseInt(priceText.replace(/\D/g, ''));
+    }
+    
+    // Clear additional services display
+    additionalContainer.innerHTML = '';
+    
+    // Add additional services
+    additionalCheckboxes.forEach(checkbox => {
+        const value = checkbox.value;
+        let price = 0;
+        
+        if (value === 'mixing') price = 75;
+        else if (value === 'mastering') price = 50;
+        else if (value === 'stems') price = 25;
+        
+        additionalTotal += price;
+        
+        const div = document.createElement('div');
+        div.className = 'd-flex justify-content-between mb-2';
+        div.innerHTML = `
+            <span>+ ${value.charAt(0).toUpperCase() + value.slice(1)}:</span>
+            <span>$${price}</span>
+        `;
+        additionalContainer.appendChild(div);
+    });
+    
+    const total = basePrice + additionalTotal;
+    document.getElementById('totalPrice').textContent = `$${total}`;
+}
+
+// Add event listeners to additional service checkboxes
+document.querySelectorAll('input[name="additional[]"]').forEach(checkbox => {
+    checkbox.addEventListener('change', calculateTotal);
+});
+
+// Form validation and submission
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const service = document.getElementById('service').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const description = document.getElementById('description').value;
+    
+    if (!name || !email || !service || !date || !time || !description) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+    submitBtn.disabled = true;
+    
+    // In a real application, you might want to add more validation here
+    // For now, let the form submit naturally
+    
+    // Reset button after a delay (in case of errors)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 5000);
+});
+
+// File upload validation
+document.getElementById('reference').addEventListener('change', function(e) {
+    const files = e.target.files;
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    for (let file of files) {
+        if (file.size > maxSize) {
+            alert(`File "${file.name}" is too large. Maximum size is 10MB.`);
+            e.target.value = '';
+            break;
+        }
+    }
+});
+
+// Add event listeners
+document.getElementById('date').addEventListener('change', checkAvailability);
+document.getElementById('service').addEventListener('change', updatePricing);
+</script>
+
+<style>
+.timeline-marker {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.timeline-content {
+    flex: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .timeline-marker {
+        margin-right: 10px;
+    }
+}
+</style>
+{% endblock %}

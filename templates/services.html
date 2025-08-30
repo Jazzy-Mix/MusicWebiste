@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Services & Pricing - JazzyMix Music Producer{% endblock %}
+
+{% block content %}
+<!-- Services Header -->
+<section class="hero-section" style="min-height: 60vh;">
+    <div class="container hero-content">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Services & Pricing</h1>
+                <p class="lead mb-4">Professional music production services tailored to bring your creative vision to life</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Services -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">What I Offer</h2>
+            <p class="lead text-muted">Comprehensive music production services for artists, labels, and content creators</p>
+        </div>
+        
+        <div class="row">
+            {% for service in services %}
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="service-icon mb-3">
+                            {% if service.name == 'Beat Production' %}
+                                <i class="fas fa-drum"></i>
+                            {% elif 'Mixing' in service.name %}
+                                <i class="fas fa-sliders-h"></i>
+                            {% elif 'Mastering' in service.name %}
+                                <i class="fas fa-wave-square"></i>
+                            {% else %}
+                                <i class="fas fa-record-vinyl"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <h4 class="fw-bold mb-3">{{ service.name }}</h4>
+                        <h3 style="color: var(--primary-color);" class="mb-3">{{ service.price }}</h3>
+                        <p class="text-muted mb-4">{{ service.description }}</p>
+                        
+                        <ul class="list-unstyled text-start mb-4">
+                            {% for feature in service.features %}
+                            <li class="mb-2">
+                                <i class="fas fa-check" style="color: var(--secondary-color);"></i> {{ feature }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('book') }}" class="btn btn-primary">
+                                Book Now
+                            </a>
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#serviceModal{{ loop.index }}">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Detail Modal -->
+            <div class="modal fade" id="serviceModal{{ loop.index }}" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.2);">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ service.name }} - Details</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6>What's Included:</h6>
+                                    <ul>
+                                        {% for feature in service.features %}
+                                        <li>{{ feature }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    
+                                    {% if service.name == 'Beat Production' %}
+                                    <h6>Process:</h6>
+                                    <ol>
+                                        <li>Consultation to understand your vision</li>
+                                        <li>Create initial beat structure and melody</li>
+                                        <li>Add drums, bass, and additional elements</li>
+                                        <li>Mix and polish the track</li>
+                                        <li>Deliver final files in multiple formats</li>
+                                    </ol>
+                                    
+                                    <h6>Typical Genres:</h6>
+                                    <p>Afrobeats, Hip-Hop, R&B, Gospel, Pop, and more</p>
+                                    
+                                    {% elif 'Mixing' in service.name %}
+                                    <h6>Mixing Process:</h6>
+                                    <ul>
+                                        <li>Level balancing and EQ</li>
+                                        <li>Compression and dynamics control</li>
+                                        <li>Spatial effects and reverb</li>
+                                        <li>Creative effects and automation</li>
+                                    </ul>
+                                    
+                                    <h6>Delivery Format:</h6>
+                                    <ul>
+                                        <li>MP3 (320kbps)</li>
+                                        <li>WAV (24-bit)</li>
+                                        <li>Stems available upon request</li>
+                                    </ul>
+                                    
+                                    {% elif 'Mastering' in service.name %}
+                                    <h6>Mastering Process:</h6>
+                                    <ul>
+                                        <li>Final EQ and dynamics processing</li>
+                                        <li>Stereo enhancement</li>
+                                        <li>Loudness optimization</li>
+                                        <li>Quality control and delivery</li>
+                                    </ul>
+                                    
+                                    <h6>Delivery Format:</h6>
+                                    <ul>
+                                        <li>MP3 (320kbps)</li>
+                                        <li>WAV (24-bit)</li>
+                                        <li>DDPi for albums</li>
+                                    </ul>
+                                    
+                                    {% else %}
+                                    <h6>Full Production Includes:</h6>
+                                    <ul>
+                                        <li>Pre-production planning</li>
+                                        <li>Recording session coordination</li>
+                                        <li>Instrumental production</li>
+                                        <li>Vocal recording and editing</li>
+                                        <li>Full mixing and mastering</li>
+                                        <li>Final delivery in all formats</li>
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>Pricing Details</h6>
+                                            <p><strong>Base Price:</strong> {{ service.price }}</p>
+                                            <p><strong>Timeline:</strong> 
+                                                {% if service.name == 'Beat Production' %}3-5 days
+                                                {% elif 'Mixing' in service.name %}2-3 days
+                                                {% elif 'Mastering' in service.name %}1-2 days
+                                                {% else %}1-2 weeks
+                                                {% endif %}
+                                            </p>
+                                            <p><strong>Revisions:</strong> 2 included</p>
+                                            
+                                            <hr>
+                                            
+                                            <h6>Add-ons Available:</h6>
+                                            <ul class="small">
+                                                <li>Rush delivery (+50%)</li>
+                                                <li>Extra revisions (+$25 each)</li>
+                                                <li>Stems/Multitracks (+$25)</li>
+                                                <li>Project files (+$50)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a href="{{ url_for('book') }}" class="btn btn-primary">Book This Service</a>
+                        </div>
+                        </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Additional Services -->
+<section class="section-padding" style="background: rgba(0,0,0,0.3);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Additional Services</h2>
+            <p class="lead text-muted">Extra services to complete your project</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-microphone" style="color: white; font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="fw-bold">Vocal Recording</h5>
+                        <p class="small text-muted">Professional vocal recording sessions</p>
+                        <strong style="color: var(--accent-color);">$50/hour</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-edit" style="color: white; font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="fw-bold">Vocal Editing</h5>
+                        <p class="small text-muted">Pitch correction, timing, and vocal enhancement</p>
+                        <strong style="color: var(--accent-color);">$50/song</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-layer-group" style="color: white; font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="fw-bold">Stem Delivery</h5>
+                        <p class="small text-muted">Individual track stems for maximum flexibility</p>
+                        <strong style="color: var(--accent-color);">$25/project</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-rocket" style="color: white; font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="fw-bold">Rush Delivery</h5>
+                        <p class="small text-muted">24-48 hour delivery for urgent projects</p>
+                        <strong style="color: var(--accent-color);">+50% fee</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Packages Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Popular Packages</h2>
+            <p class="lead text-muted">Bundled services for the best value</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 position-relative">
+                    <div class="card-body text-center p-4">
+                        <div class="badge bg-success position-absolute top-0 start-50 translate-middle">
+                            STARTER
+                        </div>
+                        <h4 class="fw-bold mt-3 mb-3">Beat + Mix Package</h4>
+                        <h2 style="color: var(--primary-color);" class="mb-3">$750</h2>
+                        <p class="text-muted mb-4">Perfect for independent artists</p>
+                        
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom beat production</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional mixing</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>MP3 + WAV files</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>2 revisions included</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>5-day delivery</li>
+                        </ul>
+                        
+                        <p class="small text-muted">Save $50 vs individual services</p>
+                        <a href="{{ url_for('book') }}" class="btn btn-primary w-100">Choose Package</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 position-relative border-primary">
+                    <div class="card-body text-center p-4">
+                        <div class="badge" style="background: var(--primary-color);" class="position-absolute top-0 start-50 translate-middle">
+                            MOST POPULAR
+                        </div>
+                        <h4 class="fw-bold mt-3 mb-3">Complete Track Package</h4>
+                        <h2 style="color: var(--primary-color);" class="mb-3">$1,200</h2>
+                        <p class="text-muted mb-4">Everything you need for a professional release</p>
+                        
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom beat production</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Vocal recording session (2 hours)</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Vocal editing & tuning</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional mixing</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Radio-ready mastering</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>All file formats + stems</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>3 revisions included</li>
+                        </ul>
+                        
+                        <p class="small text-muted">Save $200 vs individual services</p>
+                        <a href="{{ url_for('book') }}" class="btn btn-primary w-100">Choose Package</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 position-relative">
+                    <div class="card-body text-center p-4">
+                        <div class="badge bg-warning position-absolute top-0 start-50 translate-middle">
+                            PREMIUM
+                        </div>
+                        <h4 class="fw-bold mt-3 mb-3">Album Production</h4>
+                        <h2 style="color: var(--primary-color);" class="mb-3">$3,500</h2>
+                        <p class="text-muted mb-4">Complete album or EP production</p>
+                        
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>5-8 complete tracks</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Pre-production planning</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Multiple recording sessions</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Full production & arrangement</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Mix & master all tracks</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited revisions</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Project files included</li>
+                        </ul>
+                        
+                        <p class="small text-muted">Save $500+ vs individual tracks</p>
+                        <a href="{{ url_for('contact') }}" class="btn btn-primary w-100">Discuss Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="section-padding" style="background: rgba(0,0,0,0.3);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+            <p class="lead text-muted">Simple process from booking to final delivery</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4 text-center">
+                <div class="mb-3">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold; color: white;">1</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Book & Discuss</h5>
+                <p class="text-muted">Choose your service and tell me about your vision. We'll schedule a consultation to align on details.</p>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 text-center">
+                <div class="mb-3">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold; color: white;">2</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Create & Produce</h5>
+                <p class="text-muted">I'll create your track using professional equipment and techniques, keeping you updated throughout the process.</p>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 text-center">
+                <div class="mb-3">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold; color: white;">3</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Review & Revise</h5>
+                <p class="text-muted">Listen to the initial version and provide feedback. I'll make adjustments until it's exactly what you want.</p>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4 text-center">
+                <div class="mb-3">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 2rem; font-weight: bold; color: white;">4</span>
+                    </div>
+                </div>
+                <h5 class="fw-bold">Final Delivery</h5>
+                <p class="text-muted">Receive your professionally mixed and mastered track in all requested formats, ready for release.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold mb-4">Ready to Start Your Project?</h2>
+                <p class="lead mb-4">Let's discuss your vision and create something amazing together. Book a consultation or contact me with any questions.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('book') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar-alt me-2"></i>Book Now
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-comments me-2"></i>Ask Questions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
