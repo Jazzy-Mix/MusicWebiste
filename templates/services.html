@@ -2,6 +2,165 @@
 
 {% block title %}Services & Pricing - JazzyMix Music Producer{% endblock %}
 
+{% block head %}
+<style>
+:root {
+    --primary-color: #ff6b35;
+    --secondary-color: #ffd23f;
+    --accent-color: #1a1a1a;
+    --text-light: #f8f9fa;
+    --gradient: linear-gradient(135deg, #ff6b35, #ffd23f);
+    --card-bg: rgba(26, 26, 26, 0.8);
+    --card-border: rgba(255, 107, 53, 0.2);
+}
+
+body {
+    background-color: #0a0a0a !important;
+    color: var(--text-light) !important;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><defs><pattern id="music" patternUnits="userSpaceOnUse" width="100" height="100"><path d="M20,50 Q50,20 80,50 Q50,80 20,50" fill="none" stroke="%23ff6b35" stroke-width="2" opacity="0.3"/></pattern></defs><rect fill="url(%23music)" width="100%" height="100%"/></svg>');
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient);
+    opacity: 0.1;
+    animation: pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.05; }
+    100% { opacity: 0.15; }
+}
+
+.hero-content {
+    z-index: 2;
+    position: relative;
+}
+
+.section-padding {
+    padding: 80px 0;
+}
+
+.card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 15px !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: var(--primary-color) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+}
+
+.card-body {
+    color: var(--text-light) !important;
+}
+
+.btn-primary {
+    background: var(--gradient) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background: var(--gradient) !important;
+    border: none !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: transparent !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px);
+}
+
+.service-icon {
+    font-size: 3rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.text-muted {
+    color: rgba(248, 249, 250, 0.6) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-light) !important;
+}
+
+.modal-content {
+    background: rgba(0, 0, 0, 0.95) !important;
+    border: 1px solid var(--card-border) !important;
+    backdrop-filter: blur(10px);
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--card-border) !important;
+}
+
+.modal-title {
+    color: var(--text-light) !important;
+}
+
+.badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.bg-success {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(135deg, #ffc107, #fd7e14) !important;
+    color: #000 !important;
+}
+
+.border-primary {
+    border-color: var(--primary-color) !important;
+}
+
+.position-relative .badge {
+    top: -10px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Services Header -->
 <section class="hero-section" style="min-height: 60vh;">
@@ -67,7 +226,7 @@
             <!-- Service Detail Modal -->
             <div class="modal fade" id="serviceModal{{ loop.index }}" tabindex="-1">
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style="background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.2);">
+                    <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">{{ service.name }} - Details</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -279,7 +438,7 @@
             <div class="col-lg-4 mb-4">
                 <div class="card h-100 position-relative border-primary">
                     <div class="card-body text-center p-4">
-                        <div class="badge" style="background: var(--primary-color);" class="position-absolute top-0 start-50 translate-middle">
+                        <div class="badge" style="background: var(--primary-color); position: absolute; top: -10px; left: 50%; transform: translateX(-50%);">
                             MOST POPULAR
                         </div>
                         <h4 class="fw-bold mt-3 mb-3">Complete Track Package</h4>

@@ -2,6 +2,207 @@
 
 {% block title %}Book a Session - JazzyMix Music Producer{% endblock %}
 
+{% block head %}
+<style>
+:root {
+    --primary-color: #ff6b35;
+    --secondary-color: #ffd23f;
+    --accent-color: #1a1a1a;
+    --text-light: #f8f9fa;
+    --gradient: linear-gradient(135deg, #ff6b35, #ffd23f);
+    --card-bg: rgba(26, 26, 26, 0.8);
+    --card-border: rgba(255, 107, 53, 0.2);
+}
+
+body {
+    background-color: #0a0a0a !important;
+    color: var(--text-light) !important;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><defs><pattern id="music" patternUnits="userSpaceOnUse" width="100" height="100"><path d="M20,50 Q50,20 80,50 Q50,80 20,50" fill="none" stroke="%23ff6b35" stroke-width="2" opacity="0.3"/></pattern></defs><rect fill="url(%23music)" width="100%" height="100%"/></svg>');
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient);
+    opacity: 0.1;
+    animation: pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.05; }
+    100% { opacity: 0.15; }
+}
+
+.hero-content {
+    z-index: 2;
+    position: relative;
+}
+
+.section-padding {
+    padding: 80px 0;
+}
+
+.card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 15px !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: var(--primary-color) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+}
+
+.card-body {
+    color: var(--text-light) !important;
+}
+
+.btn-primary {
+    background: var(--gradient) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background: var(--gradient) !important;
+    border: none !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: transparent !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px);
+}
+
+.form-control, .form-select {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 107, 53, 0.3) !important;
+    color: var(--text-light) !important;
+    border-radius: 10px !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(0, 0, 0, 0.7) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+    color: var(--text-light) !important;
+}
+
+.form-control::placeholder {
+    color: rgba(248, 249, 250, 0.6) !important;
+}
+
+.form-label {
+    color: var(--text-light) !important;
+    font-weight: 500;
+}
+
+.form-text {
+    color: rgba(248, 249, 250, 0.7) !important;
+}
+
+.form-check-input {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-color: rgba(255, 107, 53, 0.3) !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 107, 53, 0.25) !important;
+}
+
+.form-check-label {
+    color: var(--text-light) !important;
+}
+
+.timeline-marker {
+    width: 30px;
+    height: 30px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.timeline-content {
+    flex: 1;
+}
+
+.text-muted {
+    color: rgba(248, 249, 250, 0.6) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-light) !important;
+}
+
+.modal-content {
+    background: rgba(0, 0, 0, 0.95) !important;
+    border: 1px solid var(--card-border) !important;
+    backdrop-filter: blur(10px);
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--card-border) !important;
+}
+
+.modal-title {
+    color: var(--text-light) !important;
+}
+
+#pricingSummary {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--primary-color) !important;
+}
+
+@media (max-width: 768px) {
+    .timeline-marker {
+        margin-right: 10px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Booking Header -->
 <section class="hero-section" style="min-height: 60vh;">
@@ -273,7 +474,7 @@
 <!-- Terms Modal -->
 <div class="modal fade" id="termsModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="background: rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.2);">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Terms of Service</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -408,13 +609,13 @@ function calculateTotal() {
         div.className = 'd-flex justify-content-between mb-2';
         div.innerHTML = `
             <span>+ ${value.charAt(0).toUpperCase() + value.slice(1)}:</span>
-            <span>$${price}</span>
+            <span>${price}</span>
         `;
         additionalContainer.appendChild(div);
     });
     
     const total = basePrice + additionalTotal;
-    document.getElementById('totalPrice').textContent = `$${total}`;
+    document.getElementById('totalPrice').textContent = `${total}`;
 }
 
 // Add event listeners to additional service checkboxes
@@ -471,50 +672,4 @@ document.getElementById('reference').addEventListener('change', function(e) {
 document.getElementById('date').addEventListener('change', checkAvailability);
 document.getElementById('service').addEventListener('change', updatePricing);
 </script>
-
-<style>
-.timeline-marker {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 0.8rem;
-    margin-right: 15px;
-    flex-shrink: 0;
-}
-
-.timeline-content {
-    flex: 1;
-}
-
-.form-control:focus,
-.form-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
-}
-
-.form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.card {
-    transition: all 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-    .timeline-marker {
-        margin-right: 10px;
-    }
-}
-</style>
 {% endblock %}
