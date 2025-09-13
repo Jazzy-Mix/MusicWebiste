@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Jazzy.Mix Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --danger: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .admin-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            75% { transform: translateY(-20px) rotate(270deg); }
+        }
+        
+        /* Header */
+        .admin-header {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .admin-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(45deg, #fff, #f0f8ff, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Navigation */
+        .admin-nav {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        
+        .stat-card:nth-child(1) .stat-icon { background: var(--primary); }
+        .stat-card:nth-child(2) .stat-icon { background: var(--warning); }
+        .stat-card:nth-child(3) .stat-icon { background: var(--success); }
+        .stat-card:nth-child(4) .stat-icon { background: var(--secondary); }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Enhanced Search and Filter Section */
+        .search-filter-panel {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 200px 200px 150px auto;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .results-info {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .clear-filters-btn {
+            background: var(--danger);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-filters-btn:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            transform: translateY(-2px);
+        }
+        
+        /* Table */
+        .table-container {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        .enhanced-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: transparent;
+        }
+        
+        .enhanced-table th {
+            background: rgba(255,255,255,0.1);
+            padding: 20px 15px;
+            font-weight: 600;
+            border: none;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .enhanced-table th:first-child { border-radius: 10px 0 0 0; }
+        .enhanced-table th:last-child { border-radius: 0 10px 0 0; }
+        
+        .enhanced-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            vertical-align: middle;
+        }
+        
+        .enhanced-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .enhanced-table tbody tr:hover {
+            background: rgba(255,255,255,0.05);
+            transform: scale(1.01);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-pending { 
+            background: var(--warning);
+            color: #8b4000;
+        }
+        .status-confirmed { 
+            background: var(--success);
+            color: #004d5c;
+        }
+        .status-completed { 
+            background: var(--primary);
+            color: #1a1a4d;
+        }
+        .status-cancelled { 
+            background: var(--danger);
+            color: #4d1a1a;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .btn-view { background: var(--primary); color: white; }
+        .btn-edit { background: var(--warning); color: #8b4000; }
+        .btn-delete { background: var(--danger); color: #4d1a1a; }
+        .btn-contact { background: var(--success); color: #004d5c; }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Contact Info Display */
+        .contact-info {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .contact-info div {
+            margin-bottom: 2px;
+        }
+        
+        .contact-info i {
+            width: 12px;
+            margin-right: 5px;
+            opacity: 0.7;
+        }
+        
+        /* No Results Message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .results-info {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .enhanced-table th,
+            .enhanced-table td {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .contact-info {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-icon" style="top: 10%; left: 10%; font-size: 2rem;"><i class="fas fa-music"></i></div>
+        <div class="floating-icon" style="top: 20%; right: 15%; font-size: 1.5rem; animation-delay: -2s;"><i class="fas fa-headphones"></i></div>
+        <div class="floating-icon" style="bottom: 30%; left: 20%; font-size: 2.5rem; animation-delay: -4s;"><i class="fas fa-microphone"></i></div>
+        <div class="floating-icon" style="bottom: 10%; right: 10%; font-size: 1.8rem; animation-delay: -1s;"><i class="fas fa-guitar"></i></div>
+        <div class="floating-icon" style="top: 50%; left: 5%; font-size: 2rem; animation-delay: -3s;"><i class="fas fa-drum"></i></div>
+    </div>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="d-flex justify-content-between align-items-center position-relative">
+                <div>
+                    <h1><i class="fas fa-music me-3"></i>Jazzy.Mix Studio</h1>
+                    <p class="mb-0 fs-5">Professional Music Production Admin Panel</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-bell me-2"></i>
+                        <span class="badge bg-danger">5</span>
+                    </button>
+                    <button class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-user-circle me-2"></i>Admin
+                    </button>
+                    <button class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="admin-nav">
+            <button class="nav-tab active" onclick="showSection('bookings')">
+                <i class="fas fa-calendar-alt me-2"></i>Session Bookings
+            </button>
+            <button class="nav-tab" onclick="showSection('clients')">
+                <i class="fas fa-users me-2"></i>Client Directory
+            </button>
+            <button class="nav-tab" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-line me-2"></i>Dashboard
+            </button>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-number">42</div>
+                <p class="mb-0">Total Bookings</p>
+                <small class="text-success"><i class="fas fa-arrow-up me-1"></i>+15% this month</small>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">12</div>
+                <p class="mb-0">Pending Requests</p>
+                <small class="text-warning"><i class="fas fa-exclamation-triangle me-1"></i>Requires attention</small>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-microphone"></i></div>
+                <div class="stat-number">28</div>
+                <p class="mb-0">Active Sessions</p>
+                <small class="text-info"><i class="fas fa-info-circle me-1"></i>This week</small>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-number">$8,450</div>
+                <p class="mb-0">Monthly Revenue</p>
+                <small class="text-success"><i class="fas fa-arrow-up me-1"></i>+22% from last month</small>
+            </div>
+        </div>
+        
+        <!-- Bookings Section -->
+        <div id="bookings" class="content-section active">
+            <!-- Search and Filter Panel -->
+            <div class="search-filter-panel">
+                <h5 class="mb-3"><i class="fas fa-search me-2"></i>Search & Filter Sessions</h5>
+                
+                <div class="search-row">
+                    <input type="text" id="clientSearch" class="filter-input" placeholder="🔍 Search by client name, email, or phone..." oninput="filterBookings()">
+                    
+                    <select id="serviceFilter" class="filter-input" onchange="filterBookings()">
+                        <option value="">All Services</option>
+                        <option value="mixing">Mixing</option>
+                        <option value="mastering">Mastering</option>
+                        <option value="beat-production">Beat Production</option>
+                        <option value="full-production">Full Production</option>
+                        <option value="vocal-recording">Vocal Recording</option>
+                        <option value="podcast-production">Podcast Production</option>
+                    </select>
+                    
+                    <select id="statusFilter" class="filter-input" onchange="filterBookings()">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    
+                    <input type="date" id="dateFilter" class="filter-input" onchange="filterBookings()">
+                    
+                    <button class="clear-filters-btn" onclick="clearFilters()">
+                        <i class="fas fa-times me-1"></i>Clear
+                    </button>
+                </div>
+                
+                <div class="results-info">
+                    <span id="resultsCount">Showing all sessions</span>
+                    <div>
+                        <button class="btn btn-success btn-sm me-2" onclick="exportResults()">
+                            <i class="fas fa-download me-1"></i>Export
+                        </button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newBookingModal">
+                            <i class="fas fa-plus me-1"></i>New Session
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bookings Table -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="enhanced-table">
+                        <thead>
+                            <tr>
+                                <th>Client Details</th>
+                                <th>Contact Info</th>
+                                <th>Service Type</th>
+                                <th>Session Date & Time</th>
+                                <th>Duration</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="noResultsMessage" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h5>No sessions found</h5>
+                    <p>Try adjusting your search criteria or filters</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Clients Section -->
+        <div id="clients" class="content-section">
+            <div class="search-filter-panel">
+                <h5 class="mb-3"><i class="fas fa-users me-2"></i>Client Directory</h5>
+                <div class="search-row">
+                    <input type="text" id="clientDirectorySearch" class="filter-input" placeholder="🔍 Search clients..." oninput="filterClients()">
+                    <select id="clientTypeFilter" class="filter-input" onchange="filterClients()">
+                        <option value="">All Client Types</option>
+                        <option value="artist">Artist</option>
+                        <option value="producer">Producer</option>
+                        <option value="band">Band</option>
+                        <option value="podcaster">Podcaster</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="clientStatusFilter" class="filter-input" onchange="filterClients()">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <input type="text" class="filter-input" placeholder="Min bookings" id="minBookings" oninput="filterClients()">
+                    <button class="clear-filters-btn" onclick="clearClientFilters()">
+                        <i class="fas fa-times me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="enhanced-table">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Contact Information</th>
+                                <th>Client Type</th>
+                                <th>Total Sessions</th>
+                                <th>Total Spent</th>
+                                <th>Last Session</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section">
+            <div class="table-container">
+                <h4 class="mb-4">Dashboard Overview</h4>
+                <p>Dashboard content and analytics...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data
+        const bookingsData = [
+            {
+                id: 1,
+                clientName: "Michael Johnson",
+                email: "michael@email.com",
+                phone: "+1 (555) 123-4567",
+                service: "mixing",
+                serviceName: "Audio Mixing",
+                date: "2024-08-30",
+                time: "14:00",
+                duration: "4 hours",
+                price: "$300",
+                status: "confirmed"
+            },
+            {
+                id: 2,
+                clientName: "Sarah Williams",
+                email: "sarah.w@email.com",
+                phone: "+1 (555) 234-5678",
+                service: "vocal-recording",
+                serviceName: "Vocal Recording",
+                date: "2024-08-29",
+                time: "10:00",
+                duration: "2 hours",
+                price: "$200",
+                status: "pending"
+            },
+            {
+                id: 3,
+                clientName: "Alex Rodriguez",
+                email: "alex.r@music.com",
+                phone: "+1 (555) 345-6789",
+                service: "beat-production",
+                serviceName: "Beat Production",
+                date: "2024-09-01",
+                time: "16:00",
+                duration: "6 hours",
+                price: "$500",
+                status: "pending"
+            },
+            {
+                id: 4,
+                clientName: "Emma Thompson",
+                email: "emma@artist.com",
+                phone: "+1 (555) 456-7890",
+                service: "full-production",
+                serviceName: "Full Production",
+                date: "2024-08-28",
+                time: "09:00",
+                duration: "8 hours",
+                price: "$800",
+                status: "completed"
+            },
+            {
+                id: 5,
+                clientName: "David Chen",
+                email: "david.chen@email.com",
+                phone: "+1 (555) 567-8901",
+                service: "mastering",
+                serviceName: "Audio Mastering",
+                date: "2024-08-27",
+                time: "13:00",
+                duration: "3 hours",
+                price: "$250",
+                status: "completed"
+            },
+            {
+                id: 6,
+                clientName: "Lisa Garcia",
+                email: "lisa@podcast.com",
+                phone: "+1 (555) 678-9012",
+                service: "podcast-production",
+                serviceName: "Podcast Production",
+                date: "2024-09-02",
+                time: "11:00",
+                duration: "3 hours",
+                price: "$275",
+                status: "confirmed"
+            }
+        ];
+
+        const clientsData = [
+            {
+                id: 1,
+                name: "Michael Johnson",
+                email: "michael@email.com",
+                phone: "+1 (555) 123-4567",
+                type: "producer",
+                totalSessions: 8,
+                totalSpent: 2400,
+                lastSession: "2024-08-15",
+                status: "active"
+            },
+            {
+                id: 2,
+                name: "Sarah Williams",
+                email: "sarah.w@email.com",
+                phone: "+1 (555) 234-5678",
+                type: "artist",
+                totalSessions: 12,
+                totalSpent: 3600,
+                lastSession: "2024-08-20",
+                status: "active"
+            },
+            {
+                id: 3,
+                name: "Alex Rodriguez",
+                email: "alex.r@music.com",
+                phone: "+1 (555) 345-6789",
+                type: "artist",
+                totalSessions: 5,
+                totalSpent: 1250,
+                lastSession: "2024-08-10",
+                status: "active"
+            },
+            {
+                id: 4,
+                name: "Emma Thompson",
+                email: "emma@artist.com",
+                phone: "+1 (555) 456-7890",
+                type: "band",
+                totalSessions: 15,
+                totalSpent: 4500,
+                lastSession: "2024-08-22",
+                status: "active"
+            },
+            {
+                id: 5,
+                name: "David Chen",
+                email: "david.chen@email.com",
+                phone: "+1 (555) 567-8901",
+                type: "producer",
+                totalSessions: 3,
+                totalSpent: 750,
+                lastSession: "2024-07-28",
+                status: "inactive"
+            }
+        ];
+
+        let filteredBookings = [...bookingsData];
+        let filteredClients = [...clientsData];
+
+        function renderBookings(bookings = filteredBookings) {
+            const tbody = document.getElementById('bookingsTableBody');
+            const noResults = document.getElementById('noResultsMessage');
+            
+            if (bookings.length === 0) {
+                tbody.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            tbody.innerHTML = bookings.map(booking => `
+                <tr>
+                    <td>
+                        <strong>${booking.clientName}</strong>
+                        <div class="text-muted small">ID: #${booking.id}</div>
+                    </td>
+                    <td class="contact-info">
+                        <div><i class="fas fa-envelope"></i>${booking.email}</div>
+                        <div><i class="fas fa-phone"></i>${booking.phone}</div>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: var(--primary); color: white; padding: 5px 10px; border-radius: 10px;">
+                            ${booking.serviceName}
+                        </span>
+                    </td>
+                    <td>
+                        <div><strong>${formatDate(booking.date)}</strong></div>
+                        <div class="text-muted small">${booking.time}</div>
+                    </td>
+                    <td>${booking.duration}</td>
+                    <td><strong>${booking.price}</strong></td>
+                    <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-view" title="View Details" onclick="viewBooking(${booking.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn btn-contact" title="Contact Client" onclick="contactClient('${booking.email}')">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn btn-edit" title="Edit Booking" onclick="editBooking(${booking.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn btn-delete" title="Cancel Booking" onclick="cancelBooking(${booking.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            updateResultsCount(bookings.length, 'sessions');
+        }
+
+        function renderClients(clients = filteredClients) {
+            const tbody = document.getElementById('clientsTableBody');
+            
+            tbody.innerHTML = clients.map(client => `
+                <tr>
+                    <td>
+                        <strong>${client.name}</strong>
+                        <div class="text-muted small">Client ID: #${client.id}</div>
+                    </td>
+                    <td class="contact-info">
+                        <div><i class="fas fa-envelope"></i>${client.email}</div>
+                        <div><i class="fas fa-phone"></i>${client.phone}</div>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: var(--secondary); color: white; padding: 5px 10px; border-radius: 10px; text-transform: capitalize;">
+                            ${client.type}
+                        </span>
+                    </td>
+                    <td><strong>${client.totalSessions}</strong> sessions</td>
+                    <td><strong>${client.totalSpent.toLocaleString()}</strong></td>
+                    <td>${formatDate(client.lastSession)}</td>
+                    <td>
+                        <span class="status-badge ${client.status === 'active' ? 'status-confirmed' : 'status-cancelled'}">
+                            ${client.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-view" title="View Profile" onclick="viewClient(${client.id})">
+                                <i class="fas fa-user"></i>
+                            </button>
+                            <button class="action-btn btn-contact" title="Contact Client" onclick="contactClient('${client.email}')">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn btn-edit" title="Edit Client" onclick="editClient(${client.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterBookings() {
+            const clientSearch = document.getElementById('clientSearch').value.toLowerCase();
+            const serviceFilter = document.getElementById('serviceFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            filteredBookings = bookingsData.filter(booking => {
+                const matchesClient = 
+                    booking.clientName.toLowerCase().includes(clientSearch) ||
+                    booking.email.toLowerCase().includes(clientSearch) ||
+                    booking.phone.includes(clientSearch);
+                
+                const matchesService = !serviceFilter || booking.service === serviceFilter;
+                const matchesStatus = !statusFilter || booking.status === statusFilter;
+                const matchesDate = !dateFilter || booking.date === dateFilter;
+                
+                return matchesClient && matchesService && matchesStatus && matchesDate;
+            });
+            
+            renderBookings(filteredBookings);
+        }
+
+        function filterClients() {
+            const clientSearch = document.getElementById('clientDirectorySearch').value.toLowerCase();
+            const typeFilter = document.getElementById('clientTypeFilter').value;
+            const statusFilter = document.getElementById('clientStatusFilter').value;
+            const minBookingsValue = parseInt(document.getElementById('minBookings').value) || 0;
+            
+            filteredClients = clientsData.filter(client => {
+                const matchesSearch = 
+                    client.name.toLowerCase().includes(clientSearch) ||
+                    client.email.toLowerCase().includes(clientSearch) ||
+                    client.phone.includes(clientSearch);
+                
+                const matchesType = !typeFilter || client.type === typeFilter;
+                const matchesStatus = !statusFilter || client.status === statusFilter;
+                const matchesBookings = client.totalSessions >= minBookingsValue;
+                
+                return matchesSearch && matchesType && matchesStatus && matchesBookings;
+            });
+            
+            renderClients(filteredClients);
+        }
+
+        function clearFilters() {
+            document.getElementById('clientSearch').value = '';
+            document.getElementById('serviceFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            
+            filteredBookings = [...bookingsData];
+            renderBookings();
+        }
+
+        function clearClientFilters() {
+            document.getElementById('clientDirectorySearch').value = '';
+            document.getElementById('clientTypeFilter').value = '';
+            document.getElementById('clientStatusFilter').value = '';
+            document.getElementById('minBookings').value = '';
+            
+            filteredClients = [...clientsData];
+            renderClients();
+        }
+
+        function updateResultsCount(count, type) {
+            const resultsCount = document.getElementById('resultsCount');
+            if (resultsCount) {
+                resultsCount.textContent = `Showing ${count} ${type}`;
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Action Functions
+        function viewBooking(id) {
+            const booking = bookingsData.find(b => b.id === id);
+            alert(`Viewing booking details for ${booking.clientName}\nService: ${booking.serviceName}\nDate: ${booking.date} at ${booking.time}`);
+        }
+
+        function contactClient(email) {
+            window.location.href = `mailto:${email}?subject=Regarding Your Studio Session`;
+        }
+
+        function editBooking(id) {
+            alert(`Edit booking functionality would open here for booking #${id}`);
+        }
+
+        function cancelBooking(id) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                const bookingIndex = bookingsData.findIndex(b => b.id === id);
+                if (bookingIndex !== -1) {
+                    bookingsData[bookingIndex].status = 'cancelled';
+                    filterBookings();
+                }
+            }
+        }
+
+        function viewClient(id) {
+            const client = clientsData.find(c => c.id === id);
+            alert(`Viewing client profile for ${client.name}\nTotal Sessions: ${client.totalSessions}\nTotal Spent: ${client.totalSpent}`);
+        }
+
+        function editClient(id) {
+            alert(`Edit client functionality would open here for client #${id}`);
+        }
+
+        function exportResults() {
+            alert('Export functionality would generate a CSV/Excel file with the current filtered results');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderBookings();
+            renderClients();
+            
+            // Set today's date as default for date filter
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateFilter').setAttribute('max', '2024-12-31');
+            document.getElementById('dateFilter').setAttribute('min', '2024-01-01');
+        });
+    </script>
