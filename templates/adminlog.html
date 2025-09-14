@@ -345,26 +345,6 @@
             }
         }
 
-        /* Password Strength Indicator */
-        .password-strength {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .strength-weak { background: var(--error-color); width: 33%; }
-        .strength-medium { background: var(--accent-color); width: 66%; }
-        .strength-strong { background: var(--success-color); width: 100%; }
-
         /* Form validation styles */
         .form-control.is-invalid {
             border-color: var(--error-color);
@@ -374,27 +354,64 @@
             border-color: var(--success-color);
         }
 
-        /* Forgot password link */
-        .forgot-password {
-            text-align: center;
-            margin-top: 1rem;
+        /* Flask flash messages */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
         }
 
-        .forgot-password a {
-            color: rgba(248, 249, 250, 0.6);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
+        .flash-message {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s ease-out;
         }
 
-        .forgot-password a:hover {
-            color: var(--primary-color);
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .flash-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.4);
+            color: #51cf66;
+        }
+
+        .flash-error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            color: #ff6b6b;
         }
     </style>
 </head>
 <body>
+    <!-- Flask Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ 'success' if category == 'success' else 'error' }}">
+                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }} me-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <!-- Back to Site Link -->
-    <a href="/" class="back-link d-none d-md-flex">
+    <a href="{{ url_for('home') }}" class="back-link d-none d-md-flex">
         <i class="fas fa-arrow-left"></i>
         Back to Site
     </a>
@@ -411,15 +428,13 @@
             </div>
 
             <!-- Mobile Back Link -->
-            <a href="/" class="back-link d-md-none">
+            <a href="{{ url_for('home') }}" class="back-link d-md-none">
                 <i class="fas fa-arrow-left"></i>
                 Back to Site
             </a>
 
             <!-- Login Form -->
-            <form id="loginForm" novalidate>
-                <div id="alertContainer"></div>
-
+            <form method="POST" action="{{ url_for('admin_login_post') }}" id="loginForm" novalidate>
                 <div class="form-floating">
                     <input type="text" class="form-control" id="username" name="username" placeholder="Username" required autocomplete="username" maxlength="50">
                     <label for="username">
@@ -435,9 +450,6 @@
                     <label for="password">
                         <i class="fas fa-lock me-2"></i>Password
                     </label>
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="strengthBar"></div>
-                    </div>
                     <div class="invalid-feedback">
                         Please enter your password.
                     </div>
@@ -456,10 +468,6 @@
                         Secure Login
                     </span>
                 </button>
-
-                <div class="forgot-password">
-                    <a href="#" id="forgotPasswordLink">Forgot your password?</a>
-                </div>
             </form>
 
             <div class="security-info">
@@ -486,63 +494,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Admin credentials (In production, this should be handled server-side)
-        const ADMIN_CREDENTIALS = {
-            username: 'jazzymix_admin',
-            password: 'JazzyMix2024!Admin'
-        };
-
+        // Client-side form validation and UX enhancements
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
-        const alertContainer = document.getElementById('alertContainer');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
-        const strengthBar = document.getElementById('strengthBar');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-
-        // Login attempt tracking
-        let loginAttempts = parseInt(localStorage.getItem('loginAttempts') || '0');
-        const maxAttempts = 5;
-        const lockoutTime = 15 * 60 * 1000; // 15 minutes
-
-        // Check if user is locked out
-        function isLockedOut() {
-            const lastAttempt = parseInt(localStorage.getItem('lastAttempt') || '0');
-            const now = Date.now();
-            return loginAttempts >= maxAttempts && (now - lastAttempt) < lockoutTime;
-        }
-
-        // Show alert message
-        function showAlert(message, type = 'danger') {
-            alertContainer.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : 'check-circle'} me-2"></i>
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
-        }
-
-        // Password strength checker
-        function checkPasswordStrength(password) {
-            const strength = {
-                weak: /^.{1,6}$/,
-                medium: /^(?=.*[a-z])(?=.*[A-Z]).{7,}$/,
-                strong: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
-            };
-
-            strengthBar.className = 'password-strength-bar';
-            
-            if (strength.strong.test(password)) {
-                strengthBar.classList.add('strength-strong');
-            } else if (strength.medium.test(password)) {
-                strengthBar.classList.add('strength-medium');
-            } else if (password.length > 0) {
-                strengthBar.classList.add('strength-weak');
-            } else {
-                strengthBar.style.width = '0%';
-            }
-        }
 
         // Form validation
         function validateForm() {
@@ -573,166 +529,43 @@
             return isValid;
         }
 
-        // Event listeners
-        passwordInput.addEventListener('input', (e) => {
-            checkPasswordStrength(e.target.value);
-        });
-
+        // Real-time validation
         usernameInput.addEventListener('blur', validateForm);
         passwordInput.addEventListener('blur', validateForm);
 
-        // Forgot password handler
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showAlert('Please contact the system administrator to reset your password.', 'info');
-        });
-
-        // Form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Check lockout
-            if (isLockedOut()) {
-                const remainingTime = Math.ceil((lockoutTime - (Date.now() - parseInt(localStorage.getItem('lastAttempt')))) / 1000 / 60);
-                showAlert(`Too many failed attempts. Please try again in ${remainingTime} minutes.`, 'danger');
-                return;
-            }
-
-            // Validate form
+        // Form submission with loading state
+        loginForm.addEventListener('submit', function(e) {
             if (!validateForm()) {
-                showAlert('Please correct the errors above.', 'danger');
+                e.preventDefault();
                 return;
             }
-
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
-            const rememberMe = document.getElementById('rememberMe').checked;
 
             // Show loading state
             loginBtn.classList.add('loading');
             loginBtn.disabled = true;
-
-            // Simulate server delay for realistic feel
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            try {
-                // Check credentials (In production, this would be an API call)
-                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                    // Successful login
-                    localStorage.removeItem('loginAttempts');
-                    localStorage.removeItem('lastAttempt');
-                    
-                    // Set login session
-                    if (rememberMe) {
-                        localStorage.setItem('adminLoggedIn', 'true');
-                        localStorage.setItem('loginExpiry', Date.now() + (30 * 24 * 60 * 60 * 1000)); // 30 days
-                    } else {
-                        sessionStorage.setItem('adminLoggedIn', 'true');
-                    }
-
-                    showAlert('Login successful! Redirecting to admin dashboard...', 'success');
-                    
-                    // Log successful login
-                    console.log(`Admin login successful at ${new Date().toISOString()}`);
-                    
-                    setTimeout(() => {
-                        // Redirect to admin dashboard (update URL as needed)
-                        window.location.href = '/admin/dashboard.html';
-                    }, 2000);
-
-                } else {
-                    // Failed login
-                    loginAttempts++;
-                    localStorage.setItem('loginAttempts', loginAttempts.toString());
-                    localStorage.setItem('lastAttempt', Date.now().toString());
-
-                    const remainingAttempts = maxAttempts - loginAttempts;
-                    
-                    if (remainingAttempts > 0) {
-                        showAlert(`Invalid credentials. ${remainingAttempts} attempts remaining.`, 'danger');
-                    } else {
-                        showAlert(`Too many failed attempts. Account locked for 15 minutes.`, 'danger');
-                        loginBtn.disabled = true;
-                    }
-
-                    // Clear password field and reset validation
-                    passwordInput.value = '';
-                    passwordInput.classList.remove('is-valid', 'is-invalid');
-                    checkPasswordStrength('');
-                    
-                    // Log failed attempt
-                    console.warn(`Failed admin login attempt at ${new Date().toISOString()} for username: ${username}`);
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                showAlert('An error occurred during login. Please try again.', 'danger');
-            }
-
-            // Reset loading state
-            loginBtn.classList.remove('loading');
-            loginBtn.disabled = false;
+            
+            // The form will submit normally to Flask
+            // No need to prevent default here since validation passed
         });
 
-        // Check if already logged in
-        window.addEventListener('load', () => {
-            const sessionLogin = sessionStorage.getItem('adminLoggedIn');
-            const persistentLogin = localStorage.getItem('adminLoggedIn');
-            const loginExpiry = localStorage.getItem('loginExpiry');
-
-            if (sessionLogin || (persistentLogin && loginExpiry && Date.now() < parseInt(loginExpiry))) {
-                showAlert('Already logged in. Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = '/admin/dashboard.html';
-                }, 1000);
-            }
-
-            // Show lockout message if locked out
-            if (isLockedOut()) {
-                const remainingTime = Math.ceil((lockoutTime - (Date.now() - parseInt(localStorage.getItem('lastAttempt')))) / 1000 / 60);
-                showAlert(`Account temporarily locked. Try again in ${remainingTime} minutes.`, 'danger');
-                loginBtn.disabled = true;
-            }
+        // Auto-hide flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
         });
 
-        // Auto-clear lockout
-        setInterval(() => {
-            if (!isLockedOut() && loginBtn.disabled && loginAttempts >= maxAttempts) {
-                loginBtn.disabled = false;
-                alertContainer.innerHTML = '';
-                localStorage.removeItem('loginAttempts');
-                localStorage.removeItem('lastAttempt');
-                loginAttempts = 0;
-                showAlert('Account unlocked. You may now try logging in again.', 'success');
-            }
-        }, 60000); // Check every minute
-
-        // Enhanced security measures
-        let inactivityTimer;
-        const inactivityTimeout = 30 * 60 * 1000; // 30 minutes
-
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                if (sessionStorage.getItem('adminLoggedIn') || localStorage.getItem('adminLoggedIn')) {
-                    sessionStorage.removeItem('adminLoggedIn');
-                    localStorage.removeItem('adminLoggedIn');
-                    localStorage.removeItem('loginExpiry');
-                    showAlert('Session expired due to inactivity.', 'info');
-                }
-            }, inactivityTimeout);
-        }
-
-        // Monitor user activity
-        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
-            document.addEventListener(event, resetInactivityTimer, true);
-        });
-
-        // Security measures (disable in development)
+        // Security: Disable right-click and common dev shortcuts in production
         if (location.protocol === 'https:') {
-            // Disable right-click context menu
             document.addEventListener('contextmenu', e => e.preventDefault());
             
-            // Disable common developer shortcuts
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || 
                     (e.ctrlKey && e.shiftKey && e.key === 'I') ||
@@ -744,8 +577,17 @@
             });
         }
 
-        // Initialize inactivity timer
-        resetInactivityTimer();
+        // Focus on username field when page loads
+        window.addEventListener('load', function() {
+            usernameInput.focus();
+        });
+
+        // Enter key navigation
+        usernameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                passwordInput.focus();
+            }
+        });
     </script>
 </body>
 </html>

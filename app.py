@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from datetime import datetime, timedelta
 import json
 
@@ -405,6 +405,56 @@ def book():
     
     return render_template('book.html', services=services)
 
+@app.route('/admin')
+def admin_login():
+    """Admin login page"""
+    return render_template('adminlog.html')
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login_post():
+    """Handle admin login form submission"""
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    # In a real application, you'd verify credentials against a database
+    if username == 'jazzymix_admin' and password == 'Jesuschrist1!':
+        # Set session variables to track login
+        session['admin_logged_in'] = True
+        session['admin_username'] = username
+        flash('Login successful! Welcome to the admin panel.', 'success')
+        return redirect(url_for('admin_dashboard'))
+    else:
+        flash('Invalid credentials. Please try again.', 'error')
+        return redirect(url_for('admin_login'))
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    """Admin dashboard/panel"""
+    # Check if user is logged in
+    if not session.get('admin_logged_in'):
+        flash('Please log in to access the admin panel.', 'error')
+        return redirect(url_for('admin_login'))
+    
+    return render_template('adminpanel.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    """Admin logout"""
+    session.pop('admin_logged_in', None)
+    session.pop('admin_username', None)
+    flash('You have been logged out successfully.', 'success')
+    return redirect(url_for('home'))
+
+# Optional: Add a route to check admin status
+@app.route('/admin/status')
+def admin_status():
+    """Check admin login status (for AJAX calls)"""
+    from flask import jsonify
+    return jsonify({
+        'logged_in': session.get('admin_logged_in', False),
+        'username': session.get('admin_username', '')
+    })
+
 @app.route('/api/availability/<date>')
 def check_availability(date):
     """
@@ -414,7 +464,7 @@ def check_availability(date):
     try:
         date_obj = datetime.strptime(date, '%Y-%m-%d')
         
-        # Business hours: 10 AM - 10 PM weekdays, 12 PM - 8 PM weekends
+        # Business hours: 8 AM - 10 PM weekdays, 10 AM - 8 PM weekends
         if date_obj.weekday() < 5:  # Monday to Friday
             available_times = [
                 '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', 
